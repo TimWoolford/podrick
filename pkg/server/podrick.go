@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
-func main() {
+func Start() {
 	http.HandleFunc("/", handler)
 
 	http.ListenAndServe(":8082", nil)
