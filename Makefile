@@ -1,7 +1,6 @@
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
 
-
 build:
 	docker run --rm \
 	 -v "${PWD}":${PKG} \
@@ -13,5 +12,12 @@ build:
 build-image:
 	docker build -t ${APP} .
 
+
 run:
-	docker run -it --rm  -p 8082:8082 --name ${APP} ${APP}
+	helm upgrade --install ${APP} charts/minikube
+
+
+clean:
+	helm list -q | grep ${APP} | xargs helm delete --purge
+	docker images -q ${APP} | xargs docker rmi
+	rm -rf bin/*

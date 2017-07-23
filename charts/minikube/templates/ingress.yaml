@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ .Chart.Name }}
+              servicePort: {{ .Values.service.externalPort }}

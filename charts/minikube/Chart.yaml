@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Run app in Minikube
+name: podrick
+version: 0.1.0
