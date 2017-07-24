@@ -1,16 +1,14 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-}
-
 func Start() {
-	http.HandleFunc("/", handler)
+	handlers := Handlers{k8sServer: *NewK8sServer()}
+
+	http.HandleFunc("/ready", handlers.ready)
+	http.HandleFunc("/namespaces", handlers.k8s)
 
 	http.ListenAndServe(":8082", nil)
 }
