@@ -2,8 +2,11 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
+  namespace: timtim
   labels:
-    app: {{ .Chart.Name }}
+    app_name: {{ .Chart.Name }}
+    app_version: '112'
+    config_version: '53'
     release: {{ .Release.Name }}
 spec:
   replicas: 1

@@ -13,14 +13,11 @@ build2:
 	 go get ./cmd/${APP} && go build -o bin/${APP} \
 	 ./cmd/${APP}
 
-
 build-image:
 	docker build -t ${APP} .
 
-
 run:
 	helm upgrade --install ${APP} charts/minikube
-
 
 clean:
 	helm list -q | grep ${APP} | xargs helm delete --purge

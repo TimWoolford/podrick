@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Chart.Name }}
+  namespace: timtim
   labels:
-    app: {{ .Chart.Name }}
+    app_name: {{ .Chart.Name }}
     release: {{ .Release.Name }}
 spec:
   type: ClusterIP

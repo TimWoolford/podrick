@@ -6,6 +6,7 @@ import (
 	"k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"github.com/TimWoolford/podrick/pkg/server/type"
 )
 
 type K8sServer struct {
@@ -25,7 +26,7 @@ func NewK8sServer() *K8sServer {
 		panic(err.Error())
 	}
 
-	return &K8sServer{ clientSet: clientSet }
+	return &K8sServer{clientSet: clientSet }
 }
 
 func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
@@ -46,4 +47,29 @@ func (s *K8sServer) PodList(namespace string) ([]v1.Pod) {
 	}
 
 	return pods.Items
+}
+
+func (s *K8sServer) Deployment(namespace string, appName string) _type.K8sDeployment {
+	deployment, err := s.clientSet.AppsV1beta1().Deployments(namespace).Get(appName, metav1.GetOptions{})
+
+	if err != nil {
+		panic(err.Error())
+	}
+	return _type.NewDeployment(*deployment)
+}
+
+func (s *K8sServer) DeploymentList(namespace string) ([]_type.K8sDeployment) {
+	namespaces, err := s.clientSet.AppsV1beta1().Deployments(namespace).List(metav1.ListOptions{})
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	items := namespaces.Items
+
+	vals := make([]_type.K8sDeployment, len(items))
+	for i, v := range items {
+		vals[i] = _type.NewDeployment(v)
+	}
+	return vals
 }
