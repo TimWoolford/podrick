@@ -7,26 +7,28 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"github.com/TimWoolford/podrick/pkg/deployment"
+	"github.com/TimWoolford/podrick/pkg/config"
 )
 
 type K8sServer struct {
 	clientSet *kubernetes.Clientset
+	config *config.Config
 }
 
-func NewK8sServer() *K8sServer {
-	config, err := rest.InClusterConfig()
+func New(config *config.Config) *K8sServer {
+	k8sConfig, err := rest.InClusterConfig()
 
 	if err != nil {
 		panic(err.Error())
 	}
 
-	clientSet, err := kubernetes.NewForConfig(config)
+	clientSet, err := kubernetes.NewForConfig(k8sConfig)
 
 	if err != nil {
 		panic(err.Error())
 	}
 
-	return &K8sServer{clientSet: clientSet }
+	return &K8sServer{clientSet: clientSet, config: config }
 }
 
 func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
@@ -56,7 +58,7 @@ func (s *K8sServer) Deployment(namespace string, appName string) *deployment.K8s
 		panic(err.Error())
 	}
 
-	return deployment.New(*dep)
+	return deployment.New(*dep, *s.config)
 }
 
 func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment) {
@@ -70,7 +72,7 @@ func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment
 
 	vals := make([]deployment.K8sDeployment, len(items))
 	for i, v := range items {
-		vals[i] = *deployment.New(v)
+		vals[i] = *deployment.New(v, *s.config)
 	}
 	return vals
 }

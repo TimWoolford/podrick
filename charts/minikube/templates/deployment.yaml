@@ -3,17 +3,13 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    app_name: {{ .Chart.Name }}
-    app_version: '112'
-    config_version: '53'
-    release: {{ .Release.Name }}
+    {{- include "labels" . | indent 4 }}
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
-        release: {{ .Release.Name }}
+        {{- include "labels" . | indent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -21,6 +17,9 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.service.internalPort }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
           livenessProbe:
             httpGet:
               path: /ready
@@ -29,3 +28,7 @@ spec:
             httpGet:
               path: /ready
               port: {{ .Values.service.internalPort }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Chart.Name }}

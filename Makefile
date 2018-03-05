@@ -1,33 +1,43 @@
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
+BIN=$(firstword $(subst :, ,${GOPATH}))/bin
+GODEP = $(BIN)/dep
+M = $(shell printf "\033[34;1m▶\033[0m")
 
-
-build: vendor
+bin/${APP}: vendor
 	GOOS=linux go build -v -o bin/${APP} .
 
-build2:
+.PHONY: build
+build:
 	docker run --rm \
 	 -v "${PWD}":${PKG} \
 	 -w ${PKG} \
 	 golang:1.9 \
-	 make build
+	 make bin/${APP}
 
+.PHONY: build-image
 build-image:
 	docker build -t ${APP} .
 
+.PHONY: run
 run:
 	helm upgrade --install ${APP} charts/minikube --namespace timtim
 
-clean:
-	helm list -q | grep ${APP} | xargs helm delete --purge
-	docker images -q ${APP} | xargs docker rmi -f
-	rm -rf bin/*
-	rm -rf .vendor
+.PHONY: lint
+lint: vendor | $(BASE) $(GOLINT) ; $(info $(M) running golint…) @ ## Run golint
+	$Q cd $(BASE) && ret=0 && for pkg in $(PKGS); do \
+		test -z "$$($(GOLINT) $$pkg | tee /dev/stderr)" || ret=1 ; \
+	 done ; exit $$ret
 
+.PHONY: clean
+clean: ; $(info $(M) cleaning…)
+	@helm list -q | grep ${APP} | xargs helm delete --purge
+	@docker images -q ${APP} | xargs docker rmi -f
+	@rm -rf bin/*
 
 vendor: .vendor
 
 .vendor: Gopkg.toml Gopkg.lock
 	command -v dep >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
-	dep ensure -v
+	$(GODEP) ensure -v
 	@touch $@

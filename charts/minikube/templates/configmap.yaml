@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    {{- include "labels" . | indent 4 }}
+data:
+  config.yaml: |
+    versionLabels:
+      - app_version
+      - config_version
+

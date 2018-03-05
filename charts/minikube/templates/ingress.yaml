@@ -3,8 +3,7 @@ kind: Ingress
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    app: {{ .Chart.Name }}
-    release: {{ .Release.Name }}
+    {{- include "labels" . | indent 4 }}
 spec:
   rules:
     - http:

@@ -3,8 +3,7 @@ kind: Service
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    app_name: {{ .Chart.Name }}
-    release: {{ .Release.Name }}
+    {{- include "labels" . | indent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -13,5 +12,4 @@ spec:
       protocol: TCP
       name: {{ .Chart.Name }}
   selector:
-    app: {{ .Chart.Name }}
-    release: {{ .Release.Name }}
+    app_name: {{ .Chart.Name }}
