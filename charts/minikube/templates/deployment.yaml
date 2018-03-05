@@ -2,7 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
-  namespace: timtim
   labels:
     app_name: {{ .Chart.Name }}
     app_version: '112'
@@ -19,7 +18,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Chart.Name }}:latest"
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:

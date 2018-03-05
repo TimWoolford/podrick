@@ -6,7 +6,7 @@ import (
 	"k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"github.com/TimWoolford/podrick/pkg/server/type"
+	"github.com/TimWoolford/podrick/pkg/deployment"
 )
 
 type K8sServer struct {
@@ -30,7 +30,7 @@ func NewK8sServer() *K8sServer {
 }
 
 func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
-	namespaces, err := s.clientSet.Namespaces().List(metav1.ListOptions{})
+	namespaces, err := s.clientSet.CoreV1().Namespaces().List(metav1.ListOptions{})
 
 	if err != nil {
 		panic(err.Error())
@@ -40,7 +40,7 @@ func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
 }
 
 func (s *K8sServer) PodList(namespace string) ([]v1.Pod) {
-	pods, err := s.clientSet.Pods(namespace).List(metav1.ListOptions{})
+	pods, err := s.clientSet.CoreV1().Pods(namespace).List(metav1.ListOptions{})
 
 	if err != nil {
 		panic(err.Error())
@@ -49,17 +49,18 @@ func (s *K8sServer) PodList(namespace string) ([]v1.Pod) {
 	return pods.Items
 }
 
-func (s *K8sServer) Deployment(namespace string, appName string) _type.K8sDeployment {
-	deployment, err := s.clientSet.AppsV1beta1().Deployments(namespace).Get(appName, metav1.GetOptions{})
+func (s *K8sServer) Deployment(namespace string, appName string) *deployment.K8sDeployment {
+	dep, err := s.clientSet.AppsV1().Deployments(namespace).Get(appName, metav1.GetOptions{})
 
 	if err != nil {
 		panic(err.Error())
 	}
-	return _type.NewDeployment(*deployment)
+
+	return deployment.New(*dep)
 }
 
-func (s *K8sServer) DeploymentList(namespace string) ([]_type.K8sDeployment) {
-	namespaces, err := s.clientSet.AppsV1beta1().Deployments(namespace).List(metav1.ListOptions{})
+func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment) {
+	namespaces, err := s.clientSet.AppsV1().Deployments(namespace).List(metav1.ListOptions{})
 
 	if err != nil {
 		panic(err.Error())
@@ -67,9 +68,9 @@ func (s *K8sServer) DeploymentList(namespace string) ([]_type.K8sDeployment) {
 
 	items := namespaces.Items
 
-	vals := make([]_type.K8sDeployment, len(items))
+	vals := make([]deployment.K8sDeployment, len(items))
 	for i, v := range items {
-		vals[i] = _type.NewDeployment(v)
+		vals[i] = *deployment.New(v)
 	}
 	return vals
 }

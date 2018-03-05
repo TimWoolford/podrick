@@ -1,6 +1,6 @@
-FROM golang:1.8
+FROM gcr.io/distroless/base
 
-WORKDIR /app
-ADD bin/podrick /app
+ADD template /template
+COPY bin/podrick /podrick
 
-CMD ["./podrick"]
+ENTRYPOINT ["/podrick"]

@@ -1,13 +1,11 @@
-package server
+package deployment
 
-import (
-	"strings"
-)
+import "strings"
 
 type State int
 
-const upIcon string = "&#9650;"
-const downIcon string = "&#9661;"
+const upIcon = "&#9650;"
+const downIcon = "&#9661;"
 
 const (
 	Up   State = iota + 1
@@ -26,13 +24,20 @@ func (state State) colour() string {
 	}
 }
 
+func (dep *K8sDeployment) PodStatus() (*PodStatus) {
+	return &PodStatus{
+		upCount:   int(dep.deployment.Status.ReadyReplicas),
+		downCount: int(dep.deployment.Status.UnavailableReplicas),
+	}
+}
+
 type PodStatus struct {
-	UpCount   int
-	DownCount int
+	upCount   int
+	downCount int
 }
 
 func (status *PodStatus) Health() string {
-	return strings.Repeat(upIcon, status.UpCount) + strings.Repeat(downIcon, status.DownCount)
+	return strings.Repeat(upIcon, status.upCount) + strings.Repeat(downIcon, status.downCount)
 }
 
 type SvgStatus struct {
