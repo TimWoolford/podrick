@@ -8,13 +8,14 @@ import (
 
 type Config struct {
 	VersionLabels []string `yaml:"versionLabels"`
+	AppNameLabel  string   `yaml:"appNameLabel"`
 }
 
 func Load() (*Config) {
 	config := Config{
 		VersionLabels: []string{"app_version", "config_version"},
+		AppNameLabel: "app_name",
 	}
-
 
 	data, err1 := ioutil.ReadFile("/config/config.yaml")
 	if err1 != nil {

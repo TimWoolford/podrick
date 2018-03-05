@@ -25,9 +25,10 @@ func (state State) colour() string {
 }
 
 func (dep *K8sDeployment) PodStatus() (*PodStatus) {
+	status := dep.deployment.Status
 	return &PodStatus{
-		upCount:   int(dep.deployment.Status.ReadyReplicas),
-		downCount: int(dep.deployment.Status.UnavailableReplicas),
+		upCount:   int(status.ReadyReplicas),
+		downCount: int(status.UnavailableReplicas),
 	}
 }
 

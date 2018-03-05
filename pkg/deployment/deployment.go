@@ -20,7 +20,7 @@ func (dep *K8sDeployment) Name() (string) {
 }
 
 func (dep *K8sDeployment) ApplicationName() (string) {
-	return dep.deployment.Labels["app_name"]
+	return dep.deployment.Labels[dep.config.AppNameLabel]
 }
 
 func (dep *K8sDeployment) Version() (string) {

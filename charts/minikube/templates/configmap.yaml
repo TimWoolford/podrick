@@ -9,4 +9,4 @@ data:
     versionLabels:
       - app_version
       - config_version
-
+    appNameLabel: 'app_name'
