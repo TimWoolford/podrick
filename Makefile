@@ -4,7 +4,8 @@ BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
 M = $(shell printf "\033[34;1m▶\033[0m")
 
-bin/${APP}: vendor
+.PHONY: gobuild
+gobuild: vendor
 	GOOS=linux go build -v -o bin/${APP} .
 
 .PHONY: build
@@ -13,7 +14,7 @@ build:
 	 -v "${PWD}":${PKG} \
 	 -w ${PKG} \
 	 golang:1.9 \
-	 make bin/${APP}
+	 make gobuild
 
 .PHONY: build-image
 build-image:

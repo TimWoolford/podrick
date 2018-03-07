@@ -13,8 +13,8 @@ type Config struct {
 
 func Load() (*Config) {
 	config := Config{
-		VersionLabels: []string{"app_version", "config_version"},
-		AppNameLabel: "app_name",
+		VersionLabels: []string{"app_version"},
+		AppNameLabel:  "app_name",
 	}
 
 	data, err1 := ioutil.ReadFile("/config/config.yaml")

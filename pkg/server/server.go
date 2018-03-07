@@ -2,17 +2,18 @@ package server
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	appsv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 
 	"k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"github.com/TimWoolford/podrick/pkg/deployment"
+	"github.com/TimWoolford/podrick/pkg/k8s/deployment"
 	"github.com/TimWoolford/podrick/pkg/config"
 )
 
 type K8sServer struct {
 	clientSet *kubernetes.Clientset
-	config *config.Config
+	config    *config.Config
 }
 
 func New(config *config.Config) *K8sServer {
@@ -28,7 +29,7 @@ func New(config *config.Config) *K8sServer {
 		panic(err.Error())
 	}
 
-	return &K8sServer{clientSet: clientSet, config: config }
+	return &K8sServer{clientSet: clientSet, config: config}
 }
 
 func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
@@ -51,8 +52,8 @@ func (s *K8sServer) PodList(namespace string) ([]v1.Pod) {
 	return pods.Items
 }
 
-func (s *K8sServer) Deployment(namespace string, appName string) *deployment.K8sDeployment {
-	dep, err := s.clientSet.AppsV1().Deployments(namespace).Get(appName, metav1.GetOptions{})
+func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDeployment {
+	dep, err := s.deployment(namespace).Get(name, metav1.GetOptions{})
 
 	if err != nil {
 		panic(err.Error())
@@ -62,7 +63,7 @@ func (s *K8sServer) Deployment(namespace string, appName string) *deployment.K8s
 }
 
 func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment) {
-	namespaces, err := s.clientSet.AppsV1().Deployments(namespace).List(metav1.ListOptions{})
+	namespaces, err := s.deployment(namespace).List(metav1.ListOptions{})
 
 	if err != nil {
 		panic(err.Error())
@@ -75,4 +76,8 @@ func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment
 		vals[i] = *deployment.New(v, *s.config)
 	}
 	return vals
+}
+
+func (s *K8sServer) deployment(namespace string) appsv1.DeploymentInterface {
+	return s.clientSet.AppsV1().Deployments(namespace)
 }

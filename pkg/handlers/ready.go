@@ -5,6 +5,6 @@ import (
 	"fmt"
 )
 
-func (f *Handlers) Ready(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) Ready(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "OK")
 }

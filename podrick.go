@@ -16,7 +16,7 @@ func main() {
 
 	http.HandleFunc("/ready", handler.Ready)
 	http.HandleFunc("/namespaces", handler.K8s)
-	http.HandleFunc("/app/", handler.Pod)
+	http.HandleFunc("/deployment/", handler.Deployment)
 
 	http.ListenAndServe(":8082", nil)
 }

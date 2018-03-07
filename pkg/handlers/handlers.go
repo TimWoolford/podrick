@@ -10,7 +10,7 @@ type Handlers struct {
 	template  template.Template
 }
 
-func New(server server.K8sServer ) (*Handlers) {
+func New(server server.K8sServer) (*Handlers) {
 	tmpl := template.Must(template.New("output.svg").ParseFiles("/template/output.svg"))
 
 	return &Handlers{server, *tmpl}
