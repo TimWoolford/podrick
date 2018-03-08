@@ -2,18 +2,19 @@ package handlers
 
 import (
 	"net/http"
-	"fmt"
+	"github.com/TimWoolford/podrick/pkg/k8s/namespace"
 )
 
-func (h *Handlers) K8s(w http.ResponseWriter, r *http.Request) {
-	for _, ns := range h.k8sServer.NamespaceList() {
-		fmt.Fprintf(w, "Namespace: %s\n", ns.Name)
+const NamespacePath = "/namespaces"
 
-		for _, pod := range h.k8sServer.PodList(ns.Name) {
-			fmt.Fprintf(w, "Pod: %s\n", pod.Name)
-		}
-		for _, deployment := range h.k8sServer.DeploymentList(ns.Name) {
-			fmt.Fprintf(w, "Deployment: %s\n", deployment.Name())
-		}
+func (h *Handlers) K8s(w http.ResponseWriter, r *http.Request) {
+	namespaces := h.k8sServer.NamespaceList()
+
+	nss := make([]namespace.K8sNamespace, len(namespaces))
+
+	for i, ns := range namespaces {
+		nss[i] = *namespace.New(ns.Name, h.k8sServer.DeploymentList(ns.Name))
 	}
+
+	h.template.Lookup("namespaces.html").Execute(w, nss)
 }

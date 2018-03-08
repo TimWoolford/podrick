@@ -1,22 +1,24 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/TimWoolford/podrick/pkg/handlers"
 	"github.com/TimWoolford/podrick/pkg/server"
-	"net/http"
 	"github.com/TimWoolford/podrick/pkg/config"
-	"log"
 )
 
 func main() {
 	cfg := config.Load()
-	log.Println(cfg)
+
+	fs := http.FileServer(http.Dir("/static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	handler := handlers.New(*server.New(cfg))
 
-	http.HandleFunc("/ready", handler.Ready)
-	http.HandleFunc("/namespaces", handler.K8s)
-	http.HandleFunc("/deployment/", handler.Deployment)
+	http.HandleFunc(handlers.ReadyPath, handler.Ready)
+	http.HandleFunc(handlers.NamespacePath, handler.K8s)
+	http.HandleFunc(handlers.DeploymentPath, handler.Deployment)
 
 	http.ListenAndServe(":8082", nil)
 }
