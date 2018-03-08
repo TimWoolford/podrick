@@ -16,7 +16,7 @@ func New(deployment v1.Deployment, config config.Config) *K8sDeployment {
 	return &K8sDeployment{deployment: deployment, config: config}
 }
 
-func (dep K8sDeployment) Name() (string) {
+func (dep K8sDeployment) Name() string {
 	name, present := dep.deployment.Labels[dep.config.AppNameLabel]
 	if present {
 		return name
@@ -25,16 +25,32 @@ func (dep K8sDeployment) Name() (string) {
 	return dep.deployment.Name
 }
 
-func (dep K8sDeployment) Version() (string) {
+func (dep K8sDeployment) Namespace() string {
+	return dep.deployment.Namespace
+}
+
+func (dep K8sDeployment) Version() string {
 	versions := make([]string, len(dep.config.VersionLabels))
-	for i, label := range dep.config.VersionLabels {
-		versions[i] = dep.deployment.Labels[label]
+
+	i := 0
+	for _, label := range dep.config.VersionLabels {
+		theLabel, present := dep.deployment.Labels[label]
+		if present {
+			versions[i] = theLabel
+			i = i + 1
+		}
 	}
-	return strings.Join(versions, "-")
+	appVersion := strings.Join(versions[0:i], "-")
+	if len(appVersion) > 0 {
+		return appVersion
+	}
+
+	return "Unknown"
 }
 
 func (dep K8sDeployment) Status() *status.SvgStatus {
 	return &status.SvgStatus{
+		ClusterName:   dep.config.ClusterName,
 		Version:       dep.Version(),
 		PrimaryColour: "green",
 		State:         status.Up,

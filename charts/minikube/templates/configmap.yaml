@@ -7,6 +7,20 @@ metadata:
 data:
   config.yaml: |
     versionLabels:
+      - version
       - app_version
       - config_version
     appNameLabel: 'app_name'
+    labelFile: '/etc/podinfo/labels'
+    clusterIdentifier:
+      - environment
+      - location
+    clusterNaming:
+      sonique-dev: SDV
+      utils-slu: UT-S
+      test-hhe: TS-H
+      test-slu: TS-S
+      stage-hhe: ST-H
+      stage-slu: ST-S
+      prod-hhe: PRD-H
+      prod-slu: PRD-S

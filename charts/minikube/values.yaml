@@ -5,3 +5,6 @@ service:
 properties:
   appVersion: 112
   configVersion: 53
+  cluster:
+    location: dev
+    environment: sonique

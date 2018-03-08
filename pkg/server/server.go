@@ -42,16 +42,6 @@ func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
 	return namespaces.Items
 }
 
-func (s *K8sServer) PodList(namespace string) ([]v1.Pod) {
-	pods, err := s.clientSet.CoreV1().Pods(namespace).List(metav1.ListOptions{})
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return pods.Items
-}
-
 func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDeployment {
 	dep, err := s.deployment(namespace).Get(name, metav1.GetOptions{})
 

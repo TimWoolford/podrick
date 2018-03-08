@@ -1,0 +1,11 @@
+versionLabels:
+  - version
+  - app_version
+  - config_version
+appNameLabel: 'app_name'
+labelFile: './no-such-file'
+clusterIdentifier:
+  - foo
+  - bar
+clusterNaming:
+  bar-baz: HERE

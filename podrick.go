@@ -6,19 +6,23 @@ import (
 	"github.com/TimWoolford/podrick/pkg/handlers"
 	"github.com/TimWoolford/podrick/pkg/server"
 	"github.com/TimWoolford/podrick/pkg/config"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	cfg := config.Load()
+	cfg := config.Load("/config/config.yaml")
 
-	fs := http.FileServer(http.Dir("/static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	r := mux.NewRouter()
+
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("/static"))))
 
 	handler := handlers.New(*server.New(cfg))
 
-	http.HandleFunc(handlers.ReadyPath, handler.Ready)
-	http.HandleFunc(handlers.NamespacePath, handler.K8s)
-	http.HandleFunc(handlers.DeploymentPath, handler.Deployment)
+	r.HandleFunc(handlers.ReadyPath, handler.Ready)
+	r.HandleFunc(handlers.AllNamespacePath, handler.AllNamespaces)
+	r.HandleFunc(handlers.NamespacePath, handler.Namespace)
+	r.HandleFunc(handlers.DeploymentPath, handler.Deployment)
 
+	http.Handle("/", r)
 	http.ListenAndServe(":8082", nil)
 }

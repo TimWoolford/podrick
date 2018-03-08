@@ -4,28 +4,52 @@ import (
 	"log"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"strings"
 )
 
 type Config struct {
-	VersionLabels []string `yaml:"versionLabels"`
-	AppNameLabel  string   `yaml:"appNameLabel"`
+	VersionLabels     []string          `yaml:"versionLabels"`
+	AppNameLabel      string            `yaml:"appNameLabel"`
+	LabelFile         string            `yaml:"labelFile"`
+	ClusterIdentifier []string          `yaml:"clusterIdentifier"`
+	ClusterNaming     map[string]string `yaml:"clusterNaming"`
+	PodLabels         map[string]string
+	ClusterName       string
 }
 
-func Load() (*Config) {
+func Load(configFile string) (*Config) {
+	data, err1 := ioutil.ReadFile(configFile)
+	if err1 != nil {
+		log.Fatalf("error: %v", err1)
+	}
+
 	config := Config{
 		VersionLabels: []string{"app_version"},
 		AppNameLabel:  "app_name",
 	}
 
-	data, err1 := ioutil.ReadFile("/config/config.yaml")
-	if err1 != nil {
-		log.Fatalf("error: %v", err1)
+	err := yaml.Unmarshal(data, &config)
+	if err != nil {
+		log.Fatalf("error: %v", err)
 	}
 
-	err2 := yaml.Unmarshal([]byte(data), &config)
-	if err2 != nil {
-		log.Fatalf("error: %v", err2)
-	}
+	config.PodLabels = readPodLabels(config.LabelFile)
+	config.ClusterName = clusterName(config)
 
 	return &config
+}
+
+func clusterName(c Config) string {
+	ids := make([]string, len(c.ClusterIdentifier))
+	for i, id := range c.ClusterIdentifier {
+		ids[i] = c.PodLabels[id]
+	}
+
+	name, present := c.ClusterNaming[strings.Join(ids, "-")]
+
+	if present {
+		return name
+	}
+
+	return "UNK"
 }

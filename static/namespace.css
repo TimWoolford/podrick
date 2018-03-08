@@ -1,3 +1,37 @@
 .status-wrapper {
     position: relative;
+    background-color: lightgray;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+.namespace-wrapper {
+    padding: 5px 10px 1px 10px;
+    background-color: slategrey;
+    width: 210px;
+    border-radius: 5px;
+    margin: 0 5px 5px 0;
+    float: left;
+}
+
+.state-text {
+    text-align: center;
+    font-family: "DejaVu Sans", "Verdana", "Geneva", "sans-serif";
+    color: darkkhaki;
+    padding-bottom: 5px;
+}
+
+.namespace-name {
+    text-align: center;
+    font-family: "DejaVu Sans", "Verdana", "Geneva", "sans-serif";
+    text-transform: uppercase;
+    color: antiquewhite;
+    padding-bottom: 5px;
+}
+.deployment-name {
+    text-align: center;
+    font-family: "DejaVu Sans", "Verdana", "Geneva", "sans-serif";
+    text-transform: capitalize;
+    padding-bottom: 5px;
 }

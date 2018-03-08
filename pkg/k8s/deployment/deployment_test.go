@@ -55,7 +55,7 @@ func TestReturnsVersion(t *testing.T) {
 
 	dep := &K8sDeployment{
 		deployment: deployment,
-		config:     config.Config{VersionLabels: []string{"app_ver"}},
+		config:     config.Config{VersionLabels: []string{"version", "app_ver", "conf_ver"}},
 	}
 
 	assert.Equal(t, "1.778", dep.Version())
@@ -68,8 +68,34 @@ func TestReturnsCompositeVersion(t *testing.T) {
 
 	dep := &K8sDeployment{
 		deployment: deployment,
-		config:     config.Config{VersionLabels: []string{"app_ver", "conf_ver"}},
+		config:     config.Config{VersionLabels: []string{"version", "app_ver", "conf_ver"}},
 	}
 
 	assert.Equal(t, "1.778-143", dep.Version())
+}
+
+func TestReturnsDefaultVersion(t *testing.T) {
+	deployment := v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{"version": "v1.0.20"}},
+	}
+
+	dep := &K8sDeployment{
+		deployment: deployment,
+		config:     config.Config{VersionLabels: []string{"version", "app_ver", "conf_ver"}},
+	}
+
+	assert.Equal(t, "v1.0.20", dep.Version())
+}
+
+func TestReturnsUnknownVersion(t *testing.T) {
+	deployment := v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{}},
+	}
+
+	dep := &K8sDeployment{
+		deployment: deployment,
+		config:     config.Config{VersionLabels: []string{"version", "app_ver", "conf_ver"}},
+	}
+
+	assert.Equal(t, "Unknown", dep.Version())
 }

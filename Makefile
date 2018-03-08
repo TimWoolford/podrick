@@ -1,5 +1,8 @@
+
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
+NAMESPACE?=monitoring
+
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
 M = $(shell printf "\033[34;1m▶\033[0m")
@@ -22,7 +25,7 @@ build-image:
 
 .PHONY: run
 run:
-	helm upgrade --install ${APP} charts/minikube --namespace timtim
+	helm upgrade --install ${APP} charts/minikube --namespace ${NAMESPACE}
 
 .PHONY: lint
 lint: vendor | $(BASE) $(GOLINT) ; $(info $(M) running golint…) @ ## Run golint

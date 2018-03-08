@@ -3,15 +3,9 @@
     <title>Namespaces</title>
     <link rel="stylesheet" href="/static/namespace.css">
 </head>
-
-{{ range $i, $namespace := . }}
-    <li>{{ $namespace.Name }}</li>
-    {{ range $j, $depl := $namespace.Deployments }}
-        <div class="status-wrapper">
-            <div>{{ $depl.Name }}</div>
-            <img src="/deployment/{{ $namespace.Name }}/{{ $depl.Name }}"/>
-        </div>
-    {{ end }}
+<div style="padding: 5px;">
+{{ range . }}
+    {{ template "namespace.tpl.html" .}}
 {{ end }}
-
+</div>
 </html>

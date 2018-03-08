@@ -8,6 +8,7 @@ const upIcon = "&#9650;"
 const downIcon = "&#9661;"
 
 type SvgStatus struct {
+	ClusterName   string
 	Version       string
 	State         State
 	PrimaryColour string
