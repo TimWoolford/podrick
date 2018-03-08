@@ -1,6 +1,8 @@
 package deployment
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	"k8s.io/api/apps/v1"
 	"github.com/TimWoolford/podrick/pkg/config"
 	"github.com/TimWoolford/podrick/pkg/k8s/status"
@@ -14,6 +16,15 @@ type K8sDeployment struct {
 
 func New(deployment v1.Deployment, config config.Config) *K8sDeployment {
 	return &K8sDeployment{deployment: deployment, config: config}
+}
+
+func Empty(config config.Config) *K8sDeployment {
+	return &K8sDeployment{
+		deployment: v1.Deployment{
+			ObjectMeta: metav1.ObjectMeta{Name: "name", Labels: map[string]string{"version": "DOWN"}},
+		},
+		config: config,
+	}
 }
 
 func (dep K8sDeployment) Name() string {
@@ -48,12 +59,20 @@ func (dep K8sDeployment) Version() string {
 	return "Unknown"
 }
 
-func (dep K8sDeployment) Status() *status.SvgStatus {
+func (dep *K8sDeployment) State() status.State {
+	switch dep.deployment.Labels["version"] {
+	case "DOWN":
+		return status.Down
+	default:
+		return status.Up
+	}
+}
+
+func (dep K8sDeployment) SvgStatus() *status.SvgStatus {
 	return &status.SvgStatus{
 		ClusterName:   dep.config.ClusterName,
 		Version:       dep.Version(),
-		PrimaryColour: "green",
-		State:         status.Up,
+		PrimaryColour: dep.State().Colour(),
 		UpReplicas:    int(dep.deployment.Status.ReadyReplicas),
 		DownReplicas:  int(dep.deployment.Status.UnavailableReplicas),
 	}

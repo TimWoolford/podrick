@@ -9,6 +9,7 @@ import (
 	"k8s.io/client-go/rest"
 	"github.com/TimWoolford/podrick/pkg/k8s/deployment"
 	"github.com/TimWoolford/podrick/pkg/config"
+	"fmt"
 )
 
 type K8sServer struct {
@@ -45,7 +46,12 @@ func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
 func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDeployment {
 	dep, err := s.deployment(namespace).Get(name, metav1.GetOptions{})
 
+
 	if err != nil {
+		notFoundString := fmt.Sprintf("deployments.apps \"%s\" not found", name)
+		if err.Error() == notFoundString {
+			return deployment.Empty(*s.config)
+		}
 		panic(err.Error())
 	}
 

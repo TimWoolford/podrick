@@ -6,7 +6,7 @@ import (
 )
 
 func TestStatusColour(t *testing.T) {
-	assert.Equal(t, "#4c1", Up.colour());
-	assert.Equal(t, "red", Down.colour());
-	assert.Equal(t, "#ffc200", Warn.colour());
+	assert.Equal(t, "#4c1", Up.Colour());
+	assert.Equal(t, "red", Fail.Colour());
+	assert.Equal(t, "#ffc200", Warn.Colour());
 }

@@ -2,22 +2,29 @@ package config
 
 import (
 	"os"
-	"strings"
 	"bufio"
+	"regexp"
 )
 
-func readPodLabels(labelFile string) map[string]string {
+func readPodLabels(labelFileName string) map[string]string {
 	labels := make(map[string]string)
-	labelData, err := os.Open(labelFile)
+	labelFile, err := os.Open(labelFileName)
+	defer labelFile.Close()
 
 	if err == nil {
-		scanner := bufio.NewScanner(labelData)
+		scanner := bufio.NewScanner(labelFile)
 		for scanner.Scan() {
 			line := scanner.Text()
-			i := strings.IndexRune(line, '=')
-			labels[line[:i]] = strings.TrimLeft(strings.TrimRight(line[i+1:],"\"" ), "\"")
+			key, value := convertLine(line)
+			labels[key] = value
 		}
 	}
 
 	return labels
+}
+
+func convertLine(line string) (string, string) {
+	r := regexp.MustCompile(`^(.*)="?(.*?)"?$`)
+	m := r.FindStringSubmatch(line)
+	return m[1], m[2]
 }

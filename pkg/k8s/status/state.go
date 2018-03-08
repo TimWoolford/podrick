@@ -2,23 +2,27 @@ package status
 
 const upColour = "#4c1"
 const downColour = "red"
-const defaultColour = "#ffc200"
+const warnColour = "#ffc200"
+const unknownColour = "#adadba"
 
 type State int
 
 const (
 	Up   State = iota + 1
-	Down
+	Fail
 	Warn
+	Down
 )
 
-func (state State) colour() string {
+func (state State) Colour() string {
 	switch state {
 	case Up:
 		return upColour
-	case Down:
+	case Fail:
 		return downColour
+	case Warn:
+		return warnColour
 	default:
-		return defaultColour
+		return unknownColour
 	}
 }

@@ -6,7 +6,7 @@
     {{ range .Deployments }}
         <div class="status-wrapper">
             <div class="deployment-name">{{ .Name }}</div>
-            <img src="/deployment/{{ .Namespace }}/{{ .Name }}"/>
+            {{ template "deployment.svg" .SvgStatus }}
         </div>
     {{ end }}
 </div>
