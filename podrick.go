@@ -16,9 +16,10 @@ func main() {
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("/static"))))
 
-	handler := handlers.New(*server.New(cfg))
+	handler := handlers.New(*server.New(cfg), *cfg)
 
 	r.HandleFunc(handlers.ReadyPath, handler.Ready)
+	r.HandleFunc(handlers.StatusPath, handler.Status)
 	r.HandleFunc(handlers.AllNamespacePath, handler.AllNamespaces)
 	r.HandleFunc(handlers.NamespacePath, handler.Namespace)
 	r.HandleFunc(handlers.DeploymentPath, handler.Deployment)
