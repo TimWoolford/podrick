@@ -4,98 +4,52 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
-	"github.com/gorilla/mux"
-	"github.com/TimWoolford/podrick/pkg/status"
+	"k8s.io/api/core/v1"
+
 	"github.com/TimWoolford/podrick/pkg/k8s/endpoints"
+	"github.com/TimWoolford/podrick/pkg/output"
 )
 
-type PodStatus map[string][]string
-type StatusContent map[string]interface{}
-
-type Outcome struct {
-	Status    string    `json:"status"`
-	PodStatus PodStatus `json:"podStatus"`
-}
-
-type Pod struct {
-	name       string
-	Error      error         `json:"error"`
-	StatusPage StatusContent `json:"statusPage"`
-}
-
-type Output struct {
-	Outcome Outcome        `json:"overallStatus"`
-	Pods    map[string]Pod `json:"pods"`
-}
-
-func (p Pod) Status() status.OutcomeStatus {
-	return status.OutcomeStatusFrom(p.StatusPage["overallStatus"].(string))
-}
-
-func newOutput() *Output {
-	return &Output{
-		Outcome: Outcome{Status: status.OK.String(), PodStatus: make(PodStatus)},
-		Pods:    make(map[string]Pod),
-	}
-}
-
-func (o *Output) AddPod(pod Pod) {
-	o.Outcome.Status = status.OutcomeStatusFrom(o.Outcome.Status).Prioritise(pod.Status()).String()
-	o.Outcome.PodStatus[pod.Status().String()] = append(o.Outcome.PodStatus[pod.Status().String()], pod.name)
-	o.Pods[pod.name] = pod
-}
-
-const AppStatusPath = "/status/{namespace}/{deployment}"
+const AppStatusPath = "/status/{namespace}/{name}"
 
 func (h *Handlers) AppStatus(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	port := port(r)
-	statusPath := statusPath(r)
+	request := Parse(r)
 
-	eps := h.k8sServer.Endpoint(vars["namespace"], vars["deployment"])
+	eps := h.k8sServer.Endpoint(request.Namespace, request.Name)
 
-	output := newOutput()
-	for _, ep := range eps.ReadyEndpoints(port) {
-		pod := loadPodFrom(ep, statusPath)
-		output.AddPod(*pod)
+	out := output.New()
+	for _, ep := range eps.ReadyEndpoints(request.Port) {
+		out.AddPod(loadPodFrom(ep, request.StatusPath))
 	}
 
-	bytes, _ := json.Marshal(&output)
+	for _, ep := range eps.NotReadyEndpoints(request.Port) {
+		k8sPod := h.k8sServer.Pod(request.Namespace, ep.Name)
+		if k8sPod.Status() == v1.PodRunning {
+			out.AddPod(loadPodFrom(ep, request.StatusPath))
+		}
+	}
+
+	bytes, _ := json.Marshal(&out)
+
 	w.Write(bytes)
 }
 
-func loadPodFrom(ep endpoints.K8sEndpoint, statusPath string) *Pod {
+func loadPodFrom(ep endpoints.K8sEndpoint, statusPath string) output.Pod {
 	resp, err := http.Get(ep.StatusUrl(statusPath))
 	defer resp.Body.Close()
+
 	if err != nil {
-		return &Pod{Error: err}
+		return *output.FailedPod(ep.Name, err)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return &Pod{Error: err}
+		return *output.FailedPod(ep.Name, err)
 	}
 
-	statusContent := make(StatusContent)
+	statusContent := make(output.StatusContent)
 	err = json.Unmarshal(body, &statusContent)
 
-	return &Pod{name: ep.Name, StatusPage: statusContent, Error: err}
-}
-
-func port(r *http.Request) int32 {
-	port, err := strconv.ParseInt(r.FormValue("port"), 10, 32)
-	if err != nil {
-		return 0
-	}
-	return int32(port)
-}
-
-func statusPath(r *http.Request) string {
-	path := r.FormValue("statusPath")
-	if path == "" {
-		return "/status"
-	}
-	return path
+	return *output.NewPod(ep.Name, statusContent, err)
 }

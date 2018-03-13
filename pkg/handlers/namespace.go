@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/TimWoolford/podrick/pkg/k8s/namespace"
-	"github.com/gorilla/mux"
 )
 
 const AllNamespacePath = "/namespace"
@@ -23,11 +22,10 @@ func (h *Handlers) AllNamespaces(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) Namespace(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	name := vars["namespace"]
+	request := Parse(r)
 
-	deployments := h.k8sServer.DeploymentList(name)
-	ns := namespace.New(name, deployments)
+	deployments := h.k8sServer.DeploymentList(request.Namespace)
+	ns := namespace.New(request.Namespace, deployments)
 
 	h.template.Lookup("namespace.html").Execute(w, &ns)
 }

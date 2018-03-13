@@ -1,4 +1,4 @@
-package status
+package output
 
 import (
 	"testing"
@@ -13,9 +13,9 @@ func TestConstructor(t *testing.T) {
 }
 
 func TestOutcomeName(t *testing.T) {
-	assert.Equal(t, "OK", OK.Name())
-	assert.Equal(t, "WARN", WARN.Name())
-	assert.Equal(t, "FAIL", FAIL.Name())
+	assert.Equal(t, "OK", OK.String())
+	assert.Equal(t, "WARN", WARN.String())
+	assert.Equal(t, "FAIL", FAIL.String())
 }
 
 func TestOutcomePrioritise(t *testing.T) {

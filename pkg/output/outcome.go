@@ -1,4 +1,4 @@
-package status
+package output
 
 type OutcomeStatus int
 
