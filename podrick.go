@@ -23,6 +23,8 @@ func main() {
 	r.HandleFunc(handlers.AllNamespacePath, handler.AllNamespaces)
 	r.HandleFunc(handlers.NamespacePath, handler.Namespace)
 	r.HandleFunc(handlers.DeploymentPath, handler.Deployment)
+	r.HandleFunc(handlers.DebugPath, handler.Debug)
+	r.HandleFunc(handlers.AppStatusPath, handler.AppStatus)
 
 	http.Handle("/", r)
 	http.ListenAndServe(":8082", nil)

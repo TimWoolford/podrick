@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"text/template"
+
 	"github.com/TimWoolford/podrick/pkg/server"
 	"github.com/TimWoolford/podrick/pkg/config"
 )

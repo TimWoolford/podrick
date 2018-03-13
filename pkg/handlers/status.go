@@ -1,16 +1,25 @@
 package handlers
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
+	"os"
 )
 
 const StatusPath = "/status"
 
+type Probe struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Status      string `json:"status"`
+}
+
 type StatusPage struct {
-	ApplicationVersion string `json:"applicationVersion"`
-	PropertiesVersion  string `json:"propertiesVersion"`
-	OverallStatus      string `json:"overallStatus"`
+	ApplicationVersion string  `json:"applicationVersion"`
+	PropertiesVersion  string  `json:"propertiesVersion"`
+	Hostname           string  `json:"hostname"`
+	OverallStatus      string  `json:"overallStatus"`
+	Probes             []Probe `json:"probes"`
 }
 
 func (h *Handlers) Status(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +28,7 @@ func (h *Handlers) Status(w http.ResponseWriter, r *http.Request) {
 	statusPage := StatusPage{
 		ApplicationVersion: h.config.PodLabels["app_version"],
 		PropertiesVersion:  h.config.PodLabels["config_version"],
+		Hostname:           os.Getenv("HOSTNAME"),
 		OverallStatus:      "OK",
 	}
 

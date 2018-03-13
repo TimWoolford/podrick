@@ -27,18 +27,13 @@ build-image:
 run:
 	helm upgrade --install ${APP} charts/minikube --namespace ${NAMESPACE}
 
-.PHONY: lint
-lint: vendor | $(BASE) $(GOLINT) ; $(info $(M) running golint…) @ ## Run golint
-	$Q cd $(BASE) && ret=0 && for pkg in $(PKGS); do \
-		test -z "$$($(GOLINT) $$pkg | tee /dev/stderr)" || ret=1 ; \
-	 done ; exit $$ret
-
 .PHONY: clean
 clean: ; $(info $(M) cleaning…)
 	@helm list -q | grep ${APP} | xargs helm delete --purge
 	@docker images -q ${APP} | xargs docker rmi -f
 	@rm -rf bin/*
 
+.PHONY: vendor
 vendor: .vendor
 
 .vendor: Gopkg.toml Gopkg.lock

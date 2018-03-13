@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 )
 
 const ReadyPath = "/ready"

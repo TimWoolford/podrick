@@ -1,7 +1,8 @@
 FROM gcr.io/distroless/base
 
-ADD  template    /template
-ADD  static      /static
+COPY template    /template
+COPY static      /static
+COPY config      /config
 COPY bin/podrick /podrick
 
 ENTRYPOINT ["/podrick"]

@@ -1,0 +1,8 @@
+versionLabels:
+  - version
+appNameLabel: 'name'
+labelFile: '/config/labels'
+clusterIdentifier:
+  - cluster
+clusterNaming:
+  prod: PROD
