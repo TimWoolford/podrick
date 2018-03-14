@@ -1,43 +1,34 @@
 package output
 
-type OutcomeStatus int
+import "encoding/json"
 
-const (
-	OK   OutcomeStatus = iota + 1
-	WARN
-	FAIL
-)
+type cleanPodStatus map[string][]string
 
-func OutcomeStatusFrom(str string) OutcomeStatus {
-	switch str {
-	case "OK":
-		return OK
-	case "WARN":
-		return WARN
-	case "FAIL":
-		return FAIL
-	default:
-		panic("Unknown Status " + str)
-	}
+type Outcome struct {
+	outcomeStatus OutcomeStatus
+	podStatus     PodStatus
 }
 
-func (os OutcomeStatus) Prioritise(newOs OutcomeStatus) OutcomeStatus {
-	if os > newOs {
-		return os
-	} else {
-		return newOs
-	}
+func newOutcome() Outcome {
+	return Outcome{outcomeStatus: OK, podStatus: make(PodStatus)}
 }
 
-func (os OutcomeStatus) String() string {
-	switch os {
-	case OK:
-		return "OK"
-	case WARN:
-		return "WARN"
-	case FAIL:
-		return "FAIL"
-	default:
-		panic("Unknown Status " + os.String())
+func (o Outcome) MarshalJSON() ([]byte, error) {
+	podStatus := make(cleanPodStatus)
+	for key, val := range o.podStatus {
+		podStatus[key.String()] = val
 	}
+
+	return json.Marshal(&struct {
+		Status    string         `json:"status"`
+		PodStatus cleanPodStatus `json:"podStatus"`
+	}{
+		Status:    o.outcomeStatus.String(),
+		PodStatus: podStatus,
+	})
+}
+
+func (o *Outcome) Add(pod Pod) {
+	o.outcomeStatus = o.outcomeStatus.Prioritise(pod.Status())
+	o.podStatus[pod.Status()] = append(o.podStatus[pod.Status()], pod.name)
 }

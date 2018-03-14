@@ -1,12 +1,12 @@
 <div class="namespace-wrapper">
-    <div class="namespace-name">{{ .Name }}</div>
+    <div class="namespace-name" onclick="location.href='/namespace/{{ .Name }}'">{{ .Name }}</div>
 
     {{ if not .Deployments }}
         <div class="state-text">No Deployments</div>
     {{ end }}
 
     {{ range .Deployments }}
-        <div class="status-wrapper">
+        <div class="status-wrapper" onclick="location.href='/status/{{ .Namespace  }}/{{ .Name }}'">
             <div class="deployment-name">{{ .Name }}</div>
             {{ template "deployment.svg" .SvgStatus }}
         </div>

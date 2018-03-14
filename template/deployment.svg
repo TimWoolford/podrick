@@ -1,23 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 30"
-     xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 30">
+    <mask id="outline">
+        <rect width="110" height="30" rx="3" fill="#fff"/>
+    </mask>
 
-    <a xlink:href="{{ .StatusUri }}" target="_blank">
+    <g mask="url(#outline)">
+        <rect fill="#555" x="0" y="0" width="35" height="30"/>
+        <rect fill="{{ .PrimaryColour }}" x="35" y="0" width="75" height="30"/>
+    </g>
 
-        <mask id="a">
-            <rect width="110" height="30" rx="3" fill="#fff"/>
-        </mask>
-
-        <g mask="url(#a)">
-            <rect fill="#555" x="0" y="0" width="35" height="30"/>
-            <rect fill="{{ .PrimaryColour }}" x="35" y="0" width="75" height="30"/>
-        </g>
-
-        <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
-            <text x="17.7" y="19.7" fill="#010101" fill-opacity=".3">{{ .ClusterName }}</text>
-            <text x="17.5" y="19">{{ .ClusterName }}</text>
-            <text x="72.2" y="13.7" fill="#010101" fill-opacity=".3">{{or .Version "DOWN"}}</text>
-            <text x="72.0" y="13">{{or .Version "DOWN"}}</text>
-            <text x="72.0" y="25">{{ .PodHealth }}</text>
-        </g>
-    </a>
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="17.7" y="19.7" fill="#010101" fill-opacity=".3">{{ .ClusterName }}</text>
+        <text x="17.5" y="19">{{ .ClusterName }}</text>
+        <text x="72.2" y="13.7" fill="#010101" fill-opacity=".3">{{or .Version "DOWN"}}</text>
+        <text x="72.0" y="13">{{or .Version "DOWN"}}</text>
+        <text x="72.0" y="25">{{ .PodHealth }}</text>
+    </g>
 </svg>

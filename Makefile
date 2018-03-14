@@ -8,8 +8,12 @@ GODEP = $(BIN)/dep
 M = $(shell printf "\033[34;1m▶\033[0m")
 
 .PHONY: gobuild
-gobuild: vendor
+gobuild: vendor ; $(info $(M) building…)
 	GOOS=linux go build -v -o bin/${APP} .
+
+.PHONY: gotest
+gotest: gobuild ; $(info $(M) running tests…)
+	@go test ./...
 
 .PHONY: build
 build:

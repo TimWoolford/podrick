@@ -5,29 +5,83 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConstructor(t *testing.T) {
-	assert.Equal(t, OK, OutcomeStatusFrom("OK"))
-	assert.Equal(t, WARN, OutcomeStatusFrom("WARN"))
-	assert.Equal(t, FAIL, OutcomeStatusFrom("FAIL"))
-	assert.Panics(t, func() { OutcomeStatusFrom("FOO") })
+func TestAddingOkPodToOkOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: OK, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("ok-pod-name", StatusContent{"overallStatus": OK.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, OK)
+	assert.Equal(t, outcome.podStatus[OK], []string{"ok-pod-name"})
 }
 
-func TestOutcomeName(t *testing.T) {
-	assert.Equal(t, "OK", OK.String())
-	assert.Equal(t, "WARN", WARN.String())
-	assert.Equal(t, "FAIL", FAIL.String())
+func TestAddingOkPodToWarnOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: WARN, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("ok-pod-name", StatusContent{"overallStatus": OK.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, WARN)
+	assert.Equal(t, outcome.podStatus[OK], []string{"ok-pod-name"})
 }
 
-func TestOutcomePrioritise(t *testing.T) {
-	assert.Equal(t, OK, OK.Prioritise(OK))
-	assert.Equal(t, WARN, OK.Prioritise(WARN))
-	assert.Equal(t, FAIL, OK.Prioritise(FAIL))
+func TestAddingOkPodToFailOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: FAIL, podStatus: make(PodStatus)}
 
-	assert.Equal(t, WARN, WARN.Prioritise(OK))
-	assert.Equal(t, WARN, WARN.Prioritise(WARN))
-	assert.Equal(t, FAIL, WARN.Prioritise(FAIL))
+	outcome.Add(*NewPod("ok-pod-name", StatusContent{"overallStatus": OK.String()}, nil))
 
-	assert.Equal(t, FAIL, FAIL.Prioritise(OK))
-	assert.Equal(t, FAIL, FAIL.Prioritise(WARN))
-	assert.Equal(t, FAIL, FAIL.Prioritise(FAIL))
+	assert.Equal(t, outcome.outcomeStatus, FAIL)
+	assert.Equal(t, outcome.podStatus[OK], []string{"ok-pod-name"})
+}
+
+func TestAddingWarnPodToOkOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: OK, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("warn-pod-name", StatusContent{"overallStatus": WARN.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, WARN)
+	assert.Equal(t, outcome.podStatus[WARN], []string{"warn-pod-name"})
+}
+
+func TestAddingWarnPodToWarnOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: WARN, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("warn-pod-name", StatusContent{"overallStatus": WARN.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, WARN)
+	assert.Equal(t, outcome.podStatus[WARN], []string{"warn-pod-name"})
+}
+
+func TestAddingWarnPodToFailOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: FAIL, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("warn-pod-name", StatusContent{"overallStatus": WARN.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, FAIL)
+	assert.Equal(t, outcome.podStatus[WARN], []string{"warn-pod-name"})
+}
+
+func TestAddingFailPodToOkOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: OK, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("fail-pod-name", StatusContent{"overallStatus": FAIL.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, FAIL)
+	assert.Equal(t, outcome.podStatus[FAIL], []string{"fail-pod-name"})
+}
+
+func TestAddingFailPodToWarnOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: WARN, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("fail-pod-name", StatusContent{"overallStatus": FAIL.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, FAIL)
+	assert.Equal(t, outcome.podStatus[FAIL], []string{"fail-pod-name"})
+}
+
+func TestAddingFailPodToFailOutcome(t *testing.T) {
+	outcome := Outcome{outcomeStatus: FAIL, podStatus: make(PodStatus)}
+
+	outcome.Add(*NewPod("fail-pod-name", StatusContent{"overallStatus": FAIL.String()}, nil))
+
+	assert.Equal(t, outcome.outcomeStatus, FAIL)
+	assert.Equal(t, outcome.podStatus[FAIL], []string{"fail-pod-name"})
 }

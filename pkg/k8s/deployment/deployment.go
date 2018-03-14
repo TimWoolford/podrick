@@ -7,6 +7,7 @@ import (
 	"github.com/TimWoolford/podrick/pkg/config"
 	"github.com/TimWoolford/podrick/pkg/status"
 	"strings"
+	"fmt"
 )
 
 type K8sDeployment struct {
@@ -68,8 +69,13 @@ func (dep *K8sDeployment) State() status.State {
 	}
 }
 
+func (dep *K8sDeployment) StatusUri() string {
+	return fmt.Sprintf("/status/%s/%s", dep.Namespace(), dep.Name())
+}
+
 func (dep K8sDeployment) SvgStatus() *status.SvgStatus {
 	return &status.SvgStatus{
+		StatusUri:	   dep.StatusUri(),
 		ClusterName:   dep.config.ClusterName,
 		Version:       dep.Version(),
 		PrimaryColour: dep.State().Colour(),

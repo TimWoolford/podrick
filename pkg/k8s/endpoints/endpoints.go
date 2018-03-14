@@ -20,6 +20,10 @@ func New(eps v1.Endpoints) *K8sEndpoints {
 	return &K8sEndpoints{endpoints: eps}
 }
 
+func Empty() *K8sEndpoints {
+	return &K8sEndpoints{	}
+}
+
 func (eps K8sEndpoints) ReadyEndpoints(expectedPort int32) []K8sEndpoint {
 	return eps.endpoint(expectedPort, readyEndpoints)
 }

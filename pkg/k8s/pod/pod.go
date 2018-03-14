@@ -10,22 +10,17 @@ type K8sPod struct {
 }
 
 func New(pod v1.Pod) *K8sPod {
-	return &K8sPod{
-		pod: pod,
-	}
+	return &K8sPod{pod: pod}
 }
 
 func (p *K8sPod) Name() string {
 	return p.pod.Name
 }
+
 func (p *K8sPod) StatusUrl(port int32, statusPath string) string {
-	return fmt.Sprintf("http://%s:%d%s", p.ip(), port, statusPath)
+	return fmt.Sprintf("http://%s:%d%s", p.pod.Status.PodIP, port, statusPath)
 }
 
-func (p *K8sPod) Status() v1.PodPhase {
-	return p.pod.Status.Phase
-}
-
-func (p *K8sPod) ip() string {
-	return p.pod.Status.PodIP
+func (p *K8sPod) IsRunning() bool {
+	return p.pod.Status.Phase == v1.PodRunning
 }

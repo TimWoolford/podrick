@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
@@ -6,6 +6,9 @@ metadata:
     {{- include "labels" . | indent 4 }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app_name: {{ .Chart.Name }}
   template:
     metadata:
       labels:
@@ -13,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Chart.Name }}:latest"
+          image: {{ .Values.image.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.service.internalPort }}

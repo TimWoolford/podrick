@@ -8,3 +8,6 @@ properties:
   cluster:
     location: dev
     environment: sonique
+
+image:
+  tag: 'podrick:latest'

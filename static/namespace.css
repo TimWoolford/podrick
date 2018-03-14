@@ -4,6 +4,7 @@
     border-radius: 3px;
     padding: 5px 10px;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .namespace-wrapper {
@@ -28,7 +29,9 @@
     text-transform: uppercase;
     color: antiquewhite;
     padding-bottom: 5px;
+    cursor: pointer;
 }
+
 .deployment-name {
     text-align: center;
     font-family: "DejaVu Sans", "Verdana", "Geneva", "sans-serif";
