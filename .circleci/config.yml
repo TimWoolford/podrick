@@ -19,3 +19,9 @@ jobs:
        - run:
            name: build image
            command: make build-image
+
+       - run:
+           name: push image
+           command: |
+             docker login -u $DOCKER_USER -p $DOCKER_PASS
+             make push-image

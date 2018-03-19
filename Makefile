@@ -30,6 +30,7 @@ build:
 build-image:
 	docker build -t ${TAG} .
 
+.PHONY: push-image
 push-image:
 	docker push ${TAG}
 
