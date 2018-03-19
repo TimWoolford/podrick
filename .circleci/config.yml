@@ -10,6 +10,12 @@ jobs:
      steps:
        - checkout
 
+       - setup_remote_docker
+
        - run:
-           name: build
-           command: make gotest build-image
+           name: build and test
+           command: make gotest
+
+       - run:
+           name: build image
+           command: make build-image
