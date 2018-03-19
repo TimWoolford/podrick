@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
@@ -16,20 +16,25 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ .Values.image.tag }}
+          image: {{ .Values.image }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.service.internalPort }}
+          resources:
+            limits:
+              memory: 50Mi
           volumeMounts:
             - name: config-volume
               mountPath: /config
             - name: podinfo
               mountPath: /etc/podinfo
           livenessProbe:
+            initialDelaySeconds: 30
             httpGet:
               path: /ready
               port: {{ .Values.service.internalPort }}
           readinessProbe:
+            initialDelaySeconds: 5
             httpGet:
               path: /ready
               port: {{ .Values.service.internalPort }}

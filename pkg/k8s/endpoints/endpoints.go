@@ -46,7 +46,6 @@ func notReadyEndpoints(subset v1.EndpointSubset) []v1.EndpointAddress {
 
 func (eps K8sEndpoints) endpoint(expectedPort int32, srcFunc func(subset v1.EndpointSubset) ([]v1.EndpointAddress)) []K8sEndpoint {
 	port := firstPort(expectedPort, eps.endpoints.Subsets)
-
 	var addresses []K8sEndpoint
 	for _, ss := range eps.endpoints.Subsets {
 		for _, address := range srcFunc(ss) {

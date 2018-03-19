@@ -6,7 +6,7 @@ metadata:
     {{- include "labels" . | indent 4 }}
 spec:
   rules:
-    - host: podrick.minikube
+    - host: {{ .Values.ingresHost }}
       http:
         paths:
           - path: /

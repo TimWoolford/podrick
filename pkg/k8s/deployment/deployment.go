@@ -2,7 +2,7 @@ package deployment
 
 import (
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	appsV1 "k8s.io/api/apps/v1"
+	"k8s.io/api/extensions/v1beta1"
 
 	"github.com/TimWoolford/podrick/pkg/config"
 	"github.com/TimWoolford/podrick/pkg/status"
@@ -11,17 +11,17 @@ import (
 )
 
 type K8sDeployment struct {
-	deployment appsV1.Deployment
+	deployment v1beta1.Deployment
 	config     config.Config
 }
 
-func New(deployment appsV1.Deployment, config config.Config) *K8sDeployment {
+func New(deployment v1beta1.Deployment, config config.Config) *K8sDeployment {
 	return &K8sDeployment{deployment: deployment, config: config}
 }
 
 func Empty(config config.Config) *K8sDeployment {
 	return &K8sDeployment{
-		deployment: appsV1.Deployment{
+		deployment: v1beta1.Deployment{
 			ObjectMeta: metaV1.ObjectMeta{Name: "name", Labels: map[string]string{"version": "DOWN"}},
 		},
 		config: config,

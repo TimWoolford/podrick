@@ -1,0 +1,13 @@
+service:
+  externalPort: 8082
+  internalPort: 8082
+
+team: Sonique
+
+cluster:
+  location: dev
+  environment: sonique
+
+image: 'timwoolford/podrick:0.1.0'
+
+ingresHost: podrick.test-hhe.bmtapps.bskyb.com

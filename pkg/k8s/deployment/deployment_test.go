@@ -4,14 +4,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"testing"
-	"k8s.io/api/apps/v1"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/TimWoolford/podrick/pkg/config"
+	"k8s.io/api/extensions/v1beta1"
 )
 
 func TestReturnsNameWithNoLabels(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo"},
 	}
 
@@ -23,7 +23,7 @@ func TestReturnsNameWithNoLabels(t *testing.T) {
 }
 
 func TestReturnsNameWithLabelsButNoValues(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo"},
 	}
 
@@ -36,7 +36,7 @@ func TestReturnsNameWithLabelsButNoValues(t *testing.T) {
 }
 
 func TestReturnsNameWithLabels(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{"label1": "bar"}},
 	}
 
@@ -49,7 +49,7 @@ func TestReturnsNameWithLabels(t *testing.T) {
 }
 
 func TestReturnsVersion(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{"app_ver": "1.778"}},
 	}
 
@@ -62,7 +62,7 @@ func TestReturnsVersion(t *testing.T) {
 }
 
 func TestReturnsCompositeVersion(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{"app_ver": "1.778", "conf_ver": "143"}},
 	}
 
@@ -75,7 +75,7 @@ func TestReturnsCompositeVersion(t *testing.T) {
 }
 
 func TestReturnsDefaultVersion(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{"version": "v1.0.20"}},
 	}
 
@@ -88,7 +88,7 @@ func TestReturnsDefaultVersion(t *testing.T) {
 }
 
 func TestReturnsUnknownVersion(t *testing.T) {
-	deployment := v1.Deployment{
+	deployment := v1beta1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{Name: "foo", Labels: map[string]string{}},
 	}
 

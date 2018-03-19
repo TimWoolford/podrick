@@ -2,6 +2,7 @@
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
 NAMESPACE?=monitoring
+TAG=timwoolford/${APP}
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
@@ -25,15 +26,13 @@ build:
 
 .PHONY: build-image
 build-image:
-	docker build -t ${APP} .
+	docker build -t ${TAG} .
 
-.PHONY: run
-run:
-	helm upgrade --install ${APP} charts/minikube --namespace ${NAMESPACE}
+push-image:
+	docker push ${TAG}
 
 .PHONY: clean
 clean: ; $(info $(M) cleaning…)
-	@helm list -q | grep ${APP} | xargs helm delete --purge
 	@docker images -q ${APP} | xargs docker rmi -f
 	@rm -rf bin/*
 

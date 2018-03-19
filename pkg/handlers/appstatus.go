@@ -22,10 +22,7 @@ func (h *Handlers) AppStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, ep := range eps.NotReadyEndpoints(request.Port) {
-		k8sPod := h.k8sServer.Pod(request.Namespace, ep.Name)
-		if k8sPod.IsRunning() {
-			out.AddPod(loadPodFrom(ep, request.StatusPath))
-		}
+		out.AddPod(loadPodFrom(ep, request.StatusPath))
 	}
 
 	bytes, _ := json.Marshal(&out)
