@@ -1,7 +1,0 @@
-{{- define "labels"}}
-app_name: {{ .Chart.Name }}
-app_version: {{ .Chart.Version | quote }}
-environment: {{ .Values.cluster.environment }}
-location: {{ .Values.cluster.location }}
-dev_team_responsible: {{ .Values.team }}
-{{- end }}

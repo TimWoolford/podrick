@@ -1,8 +1,10 @@
+CIRCLE_BUILD_NUM ?= 0
 
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
 NAMESPACE?=monitoring
-TAG=timwoolford/${APP}
+TAG=timwoolford/${APP}:0.1.$(CIRCLE_BUILD_NUM)
+
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
