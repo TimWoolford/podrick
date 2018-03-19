@@ -10,4 +10,4 @@ cluster:
 
 image: 'timwoolford/podrick:0.1.0'
 
-ingresHost: podrick.test-hhe.bmtapps.bskyb.com
+ingressHost: podrick.test-hhe.bmtapps.bskyb.com

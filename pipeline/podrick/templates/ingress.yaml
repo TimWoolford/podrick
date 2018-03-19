@@ -4,9 +4,18 @@ metadata:
   name: {{ .Chart.Name }}
   labels:
     {{- include "labels" . | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/proxy-next-upstream: "error timeout invalid_header"
 spec:
+  tls:
+  - hosts:
+    - {{ .Values.ingressHost }}
+    secretName: {{ .Chart.Name }}-tls
   rules:
-    - host: {{ .Values.ingresHost }}
+    - host: {{ .Values.ingressHost }}
       http:
         paths:
           - path: /
