@@ -1,7 +1,7 @@
 
 
 
-[https://circleci.com/gh/TimWoolford/podrick.svg?style=shield&circle-token=:circle-token]
+![circle ci](https://circleci.com/gh/TimWoolford/podrick.svg?style=shield&circle-token=:circle-token)
 
 ## Podrick 
 
