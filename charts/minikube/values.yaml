@@ -1,0 +1,13 @@
+service:
+  externalPort: 8082
+  internalPort: 8082
+
+properties:
+  appVersion: 112
+  configVersion: 53
+  cluster:
+    location: dev
+    environment: sonique
+
+image:
+  tag: 'timwoolford/podrick:0.1.0'

@@ -1,0 +1,6 @@
+{{- define "labels"}}
+app_name: {{ .Chart.Name }}
+app_version: {{ .Chart.Version | quote }}
+config_version: '53'
+cluster: 'dev'
+{{- end }}
