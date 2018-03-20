@@ -1,6 +1,6 @@
 package namespace
 
-import "github.com/TimWoolford/podrick/pkg/k8s/deployment"
+import "github.com/TimWoolford/podrick/internal/k8s/deployment"
 
 type K8sNamespace struct {
 	name        string

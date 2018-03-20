@@ -2,37 +2,38 @@ package endpoints
 
 import (
 	"testing"
+
 	"k8s.io/api/core/v1"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReadyEndpoints(t *testing.T) {
 	myEp := buildEndpoints()
 
-	assert.Equal(t, []K8sEndpoint{{address: "1.2.3.4", port: 8012}, {address:"1.2.3.1", port: 8012}}, myEp.ReadyEndpoints(0))
+	assert.Equal(t, []K8sEndpoint{{address: "1.2.3.4", port: 8012}, {address: "1.2.3.1", port: 8012}}, myEp.ReadyEndpoints(0))
 }
 
 func TestReadyEndpointsWithDefaultPort(t *testing.T) {
 	myEp := buildEndpoints()
 
-	assert.Equal(t, []K8sEndpoint{{address: "1.2.3.4", port: 1234}, {address:"1.2.3.1", port: 1234}}, myEp.ReadyEndpoints(1234))
+	assert.Equal(t, []K8sEndpoint{{address: "1.2.3.4", port: 1234}, {address: "1.2.3.1", port: 1234}}, myEp.ReadyEndpoints(1234))
 }
-
 
 func TestNotReadyEndpoints(t *testing.T) {
 	myEp := buildEndpoints()
 
-	assert.Equal(t, []K8sEndpoint{{address: "3.1.3.4", port: 8012}, {address:"3.1.3.1", port: 8012}}, myEp.NotReadyEndpoints(0))
+	assert.Equal(t, []K8sEndpoint{{address: "3.1.3.4", port: 8012}, {address: "3.1.3.1", port: 8012}}, myEp.NotReadyEndpoints(0))
 }
 
 func TestNotReadyEndpointsWithDefaultPort(t *testing.T) {
 	myEp := buildEndpoints()
 
-	assert.Equal(t, []K8sEndpoint{{address: "3.1.3.4", port: 9876}, {address:"3.1.3.1", port: 9876}}, myEp.NotReadyEndpoints(9876))
+	assert.Equal(t, []K8sEndpoint{{address: "3.1.3.4", port: 9876}, {address: "3.1.3.1", port: 9876}}, myEp.NotReadyEndpoints(9876))
 }
 
 func buildEndpoints() *K8sEndpoints {
-	return New(v1.Endpoints{
+	return New(&v1.Endpoints{
 		Subsets: []v1.EndpointSubset{
 			{
 				Addresses: []v1.EndpointAddress{
@@ -49,6 +50,5 @@ func buildEndpoints() *K8sEndpoints {
 				},
 			},
 		},
-	})
+	}, nil)
 }
-

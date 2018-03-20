@@ -2,38 +2,29 @@ package endpoints
 
 import (
 	"k8s.io/api/core/v1"
-	"fmt"
+	"github.com/TimWoolford/podrick/internal/config"
 )
 
 type K8sEndpoints struct {
-	endpoints v1.Endpoints
+	endpoints *v1.Endpoints
+	config    *config.Config
 }
 
-type K8sEndpoint struct {
-	Name      string
-	Namespace string
-	address   string
-	port      int32
-}
 
-func New(eps v1.Endpoints) *K8sEndpoints {
-	return &K8sEndpoints{endpoints: eps}
+func New(eps *v1.Endpoints, config *config.Config) *K8sEndpoints {
+	return &K8sEndpoints{endpoints: eps, config: config}
 }
 
 func Empty() *K8sEndpoints {
-	return &K8sEndpoints{	}
+	return &K8sEndpoints{}
 }
 
 func (eps K8sEndpoints) ReadyEndpoints(expectedPort int32) []K8sEndpoint {
-	return eps.endpoint(expectedPort, readyEndpoints)
+	return eps.endpointsFor(expectedPort, readyEndpoints)
 }
 
 func (eps K8sEndpoints) NotReadyEndpoints(expectedPort int32) []K8sEndpoint {
-	return eps.endpoint(expectedPort, notReadyEndpoints)
-}
-
-func (ep K8sEndpoint) StatusUrl(statusPath string) string {
-	return fmt.Sprintf("http://%s:%d%s", ep.address, ep.port, statusPath)
+	return eps.endpointsFor(expectedPort, notReadyEndpoints)
 }
 
 func readyEndpoints(subset v1.EndpointSubset) []v1.EndpointAddress {
@@ -44,16 +35,19 @@ func notReadyEndpoints(subset v1.EndpointSubset) []v1.EndpointAddress {
 	return subset.NotReadyAddresses
 }
 
-func (eps K8sEndpoints) endpoint(expectedPort int32, srcFunc func(subset v1.EndpointSubset) ([]v1.EndpointAddress)) []K8sEndpoint {
+func (eps K8sEndpoints) endpointsFor(expectedPort int32, srcFunc func(subset v1.EndpointSubset) ([]v1.EndpointAddress)) []K8sEndpoint {
 	port := firstPort(expectedPort, eps.endpoints.Subsets)
+
 	var addresses []K8sEndpoint
 	for _, ss := range eps.endpoints.Subsets {
 		for _, address := range srcFunc(ss) {
 			addresses = append(addresses, K8sEndpoint{
-				Name:      address.TargetRef.Name,
-				Namespace: eps.endpoints.Namespace,
-				address:   address.IP,
-				port:      port,
+				Name:        address.TargetRef.Name,
+				Namespace:   eps.endpoints.Namespace,
+				Annotations: eps.endpoints.Annotations,
+				address:     address.IP,
+				port:        port,
+				config:      eps.config,
 			})
 		}
 	}

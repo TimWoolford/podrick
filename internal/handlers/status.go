@@ -16,7 +16,6 @@ type Probe struct {
 
 type StatusPage struct {
 	ApplicationVersion string  `json:"applicationVersion"`
-	PropertiesVersion  string  `json:"propertiesVersion"`
 	Hostname           string  `json:"hostname"`
 	OverallStatus      string  `json:"overallStatus"`
 	Probes             []Probe `json:"probes"`
@@ -27,7 +26,6 @@ func (h *Handlers) Status(w http.ResponseWriter, r *http.Request) {
 
 	statusPage := StatusPage{
 		ApplicationVersion: h.config.PodLabels["app_version"],
-		PropertiesVersion:  h.config.PodLabels["config_version"],
 		Hostname:           os.Getenv("HOSTNAME"),
 		OverallStatus:      "OK",
 	}

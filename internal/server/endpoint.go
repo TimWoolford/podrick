@@ -2,7 +2,7 @@ package server
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/TimWoolford/podrick/pkg/k8s/endpoints"
+	"github.com/TimWoolford/podrick/internal/k8s/endpoints"
 	"fmt"
 )
 
@@ -16,5 +16,5 @@ func (s *K8sServer) Endpoint(namespace string, name string) *endpoints.K8sEndpoi
 		panic(err)
 	}
 
-	return endpoints.New(*eps)
+	return endpoints.New(eps, s.config)
 }

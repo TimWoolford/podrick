@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/TimWoolford/podrick/pkg/k8s/endpoints"
-	"github.com/TimWoolford/podrick/pkg/output"
+	"github.com/TimWoolford/podrick/internal/k8s/endpoints"
+	"github.com/TimWoolford/podrick/internal/output"
 )
 
 const AppStatusPath = "/status/{namespace}/{name}"

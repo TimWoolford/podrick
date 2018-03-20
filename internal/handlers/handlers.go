@@ -3,8 +3,8 @@ package handlers
 import (
 	"text/template"
 
-	"github.com/TimWoolford/podrick/pkg/server"
-	"github.com/TimWoolford/podrick/pkg/config"
+	"github.com/TimWoolford/podrick/internal/server"
+	"github.com/TimWoolford/podrick/internal/config"
 )
 
 type Handlers struct {

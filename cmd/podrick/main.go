@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"github.com/TimWoolford/podrick/pkg/handlers"
-	"github.com/TimWoolford/podrick/pkg/server"
-	"github.com/TimWoolford/podrick/pkg/config"
+	"github.com/TimWoolford/podrick/internal/handlers"
+	"github.com/TimWoolford/podrick/internal/server"
+	"github.com/TimWoolford/podrick/internal/config"
 	"github.com/gorilla/mux"
 )
 

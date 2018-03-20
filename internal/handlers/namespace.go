@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/TimWoolford/podrick/pkg/k8s/namespace"
+	"github.com/TimWoolford/podrick/internal/k8s/namespace"
 )
 
 const AllNamespacePath = "/namespace"

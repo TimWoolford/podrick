@@ -1,8 +1,13 @@
 versionLabels:
   - version
+
 appNameLabel: 'name'
+statusPathAnnotation: 'podrick/statusPath'
+
 labelFile: '/config/labels'
+
 clusterIdentifier:
   - cluster
+
 clusterNaming:
   prod: PROD

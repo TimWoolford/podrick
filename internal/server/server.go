@@ -4,7 +4,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
-	"github.com/TimWoolford/podrick/pkg/config"
+	"github.com/TimWoolford/podrick/internal/config"
 )
 
 type K8sServer struct {

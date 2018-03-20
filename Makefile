@@ -12,7 +12,7 @@ M = $(shell printf "\033[34;1m▶\033[0m")
 
 .PHONY: gobuild
 gobuild: vendor ; $(info $(M) building…)
-	GOOS=linux go build -v -o bin/${APP} .
+	GOOS=linux go build -v -o bin/${APP} ./cmd/podrick
 
 .PHONY: gotest
 gotest: gobuild ; $(info $(M) running tests…)

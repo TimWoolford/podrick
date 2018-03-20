@@ -3,7 +3,7 @@ package server
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/TimWoolford/podrick/pkg/k8s/deployment"
+	"github.com/TimWoolford/podrick/internal/k8s/deployment"
 	"fmt"
 )
 
@@ -13,12 +13,12 @@ func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDep
 	if err != nil {
 		notFoundString := fmt.Sprintf("deployments.apps \"%s\" not found", name)
 		if err.Error() == notFoundString {
-			return deployment.Empty(*s.config)
+			return deployment.Empty(s.config)
 		}
 		panic(err.Error())
 	}
 
-	return deployment.New(*dep, *s.config)
+	return deployment.New(*dep, s.config)
 
 }
 
@@ -31,7 +31,7 @@ func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment
 
 	vals := make([]deployment.K8sDeployment, len(deploymentList.Items))
 	for i, v := range deploymentList.Items {
-		vals[i] = *deployment.New(v, *s.config)
+		vals[i] = *deployment.New(v, s.config)
 	}
 	return vals
 }

@@ -2,7 +2,7 @@ package server
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/TimWoolford/podrick/pkg/k8s/pod"
+	"github.com/TimWoolford/podrick/internal/k8s/pod"
 )
 
 func (s *K8sServer) PodList(namespace string) []pod.K8sPod {
