@@ -42,7 +42,7 @@ clean: ; $(info $(M) cleaning…)
 vendor: .vendor
 
 .vendor: Gopkg.toml Gopkg.lock
-	command -v dep >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
+	command -v $(GODEP) >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
 	$(GODEP) ensure -v
 	@touch $@
 
