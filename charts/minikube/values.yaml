@@ -10,4 +10,4 @@ properties:
     environment: sonique
 
 image:
-  tag: 'timwoolford/podrick:0.1.0'
+  tag: 'timwoolford/podrick:0.1.11'

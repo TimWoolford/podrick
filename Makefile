@@ -3,6 +3,7 @@ CIRCLE_BUILD_NUM ?= 0
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
 TAG=timwoolford/${APP}:0.1.$(CIRCLE_BUILD_NUM)
+TILLER_NAMESPACE?=helm
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
@@ -50,4 +51,4 @@ clean-minikube:
 
 .PHONY: deploy-minikube
 deploy-minikube:
-	helm upgrade --install ${APP} charts/minikube --namespace monitoring
+	helm upgrade --tiller-namespace ${TILLER_NAMESPACE} --install ${APP} charts/minikube --namespace monitoring
