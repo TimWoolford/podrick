@@ -1,12 +1,21 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/app-root: /namespace
   name: {{ .Chart.Name }}
   labels:
     {{- include "labels" . | indent 4 }}
 spec:
   rules:
-    - host: podrick.sandbox-hhe.bmtapps.bskyb.com
+    - host: podrick.minikube
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ .Chart.Name }}
+              servicePort: {{ .Values.service.externalPort }}
+    - host: aggro.minikube.bmtapps.bskyb.com
       http:
         paths:
           - path: /

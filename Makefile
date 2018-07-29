@@ -1,4 +1,4 @@
-CIRCLE_BUILD_NUM ?= 0
+CIRCLE_BUILD_NUM ?= dev
 
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
@@ -22,7 +22,7 @@ build:
 	docker run --rm \
 	 -v "${PWD}":${PKG} \
 	 -w ${PKG} \
-	 golang:1.9 \
+	 golang:1.10 \
 	 make gobuild
 
 .PHONY: build-image

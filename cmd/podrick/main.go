@@ -6,17 +6,22 @@ import (
 	"github.com/TimWoolford/podrick/internal/handlers"
 	"github.com/TimWoolford/podrick/internal/server"
 	"github.com/TimWoolford/podrick/internal/config"
+
 	"github.com/gorilla/mux"
+	ghandlers "github.com/gorilla/handlers"
+
+	"log"
+	"os"
 )
 
 func main() {
 	cfg := config.Load("/config/config.yaml")
+	handler := handlers.New(*server.New(cfg), *cfg)
+	log.Println("Podrick is starting")
 
 	r := mux.NewRouter()
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("/static"))))
-
-	handler := handlers.New(*server.New(cfg), *cfg)
 
 	r.HandleFunc(handlers.ReadyPath, handler.Ready)
 	r.HandleFunc(handlers.StatusPath, handler.Status)
@@ -26,7 +31,9 @@ func main() {
 	r.HandleFunc(handlers.AppStatusPath, handler.AppStatus)
 	r.HandleFunc(handlers.PodPath, handler.AllPods)
 
+	r.HandleFunc("/{namespace}/http/{name}", handler.AppStatus)
 
-	http.Handle("/", r)
+	loggedRouter := ghandlers.LoggingHandler(os.Stdout, r)
+	http.Handle("/", loggedRouter)
 	http.ListenAndServe(":8082", nil)
 }

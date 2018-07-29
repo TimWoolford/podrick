@@ -1,3 +1,4 @@
 bin
 vendor
 .vendor
+Gopkg.lock
