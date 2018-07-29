@@ -7,15 +7,17 @@ TILLER_NAMESPACE?=helm
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
+V = 0
+Q = $(if $(filter 1,$V),,@)
 M = $(shell printf "\033[34;1m▶\033[0m")
 
 .PHONY: gobuild
 gobuild: vendor ; $(info $(M) building…)
-	GOOS=linux go build -v -o bin/${APP} ./cmd/podrick
+	$Q GOOS=linux go build -v -o bin/${APP} ./cmd/podrick
 
 .PHONY: gotest
 gotest: gobuild ; $(info $(M) running tests…)
-	@go test ./...
+	$Q go test ./...
 
 .PHONY: build
 build:
@@ -33,18 +35,21 @@ build-image:
 push-image:
 	docker push ${TAG}
 
+.PHONY: clean-vendor
+clean-vendor:
+	rm -rf .vendor vendor Gopkg.lock
+
 .PHONY: clean
 clean: ; $(info $(M) cleaning…)
-	@docker images -q ${APP} | xargs docker rmi -f
-	@rm -rf bin/*
+	$Q docker images -q ${TAG} | xargs docker rmi -f
+	$Q rm -rf bin/*
 
-.PHONY: vendor
-vendor: .vendor
 
-.vendor: Gopkg.toml Gopkg.lock
-	command -v $(GODEP) >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
-	$(GODEP) ensure -v
-	@touch $@
+vendor: Gopkg.toml Gopkg.lock ; $(info $(M) retrieving dependencies…)
+	$Q command -v $(GODEP) >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
+	$Q $(GODEP) ensure -v
+	$Q touch $@
+
 
 clean-minikube:
 	helm delete ${APP} --purge
