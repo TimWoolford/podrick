@@ -24,7 +24,7 @@ build:
 	docker run --rm \
 	 -v "${PWD}":${PKG} \
 	 -w ${PKG} \
-	 golang:1.10 \
+	 golang:1.11 \
 	 make gobuild
 
 .PHONY: build-image

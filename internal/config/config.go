@@ -31,9 +31,9 @@ func Load(configFile string) (*Config) {
 		DefaultStatusPath: "/status",
 	}
 
-	err := yaml.Unmarshal(data, &config)
-	if err != nil {
-		log.Fatalf("error: %v", err)
+	err2 := yaml.Unmarshal(data, &config)
+	if err2 != nil {
+		log.Fatalf("error: %v", err2)
 	}
 
 	config.PodLabels = readPodLabels(config.LabelFile)
