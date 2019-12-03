@@ -22,7 +22,7 @@ type StatusPage struct {
 }
 
 func (h *Handlers) Status(w http.ResponseWriter, r *http.Request) {
-	w.Header()["Content-Type"] = []string{"text/json"}
+	w.Header()["Content-Type"] = []string{"application/json"}
 
 	statusPage := StatusPage{
 		ApplicationVersion: h.config.PodLabels["app_version"],
@@ -30,7 +30,7 @@ func (h *Handlers) Status(w http.ResponseWriter, r *http.Request) {
 		OverallStatus:      "OK",
 	}
 
-	bytes, _ := json.Marshal(statusPage)
+	bytes, _ := json.MarshalIndent(statusPage, "", "    ")
 
 	w.Write(bytes)
 }
