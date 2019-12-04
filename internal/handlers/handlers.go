@@ -3,8 +3,8 @@ package handlers
 import (
 	"text/template"
 
-	"github.com/TimWoolford/podrick/internal/server"
 	"github.com/TimWoolford/podrick/internal/config"
+	"github.com/TimWoolford/podrick/internal/server"
 )
 
 type Handlers struct {
@@ -13,7 +13,7 @@ type Handlers struct {
 	config    config.Config
 }
 
-func New(server server.K8sServer, config config.Config) (*Handlers) {
+func New(server server.K8sServer, config config.Config) *Handlers {
 	tmpl := template.Must(template.ParseGlob("/template/*"))
 
 	return &Handlers{server, *tmpl, config}

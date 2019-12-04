@@ -3,8 +3,8 @@ package server
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/TimWoolford/podrick/internal/k8s/deployment"
 	"fmt"
+	"github.com/TimWoolford/podrick/internal/k8s/deployment"
 )
 
 func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDeployment {
@@ -19,10 +19,9 @@ func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDep
 	}
 
 	return deployment.New(*dep, s.config)
-
 }
 
-func (s *K8sServer) DeploymentList(namespace string) ([]deployment.K8sDeployment) {
+func (s *K8sServer) DeploymentList(namespace string) []deployment.K8sDeployment {
 	deploymentList, err := s.clientSet.ExtensionsV1beta1().Deployments(namespace).List(metav1.ListOptions{})
 
 	if err != nil {

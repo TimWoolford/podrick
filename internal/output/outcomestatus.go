@@ -1,10 +1,9 @@
 package output
 
-
 type OutcomeStatus int
 
 const (
-	OK   OutcomeStatus = iota + 1
+	OK OutcomeStatus = iota + 1
 	WARN
 	FAIL
 )

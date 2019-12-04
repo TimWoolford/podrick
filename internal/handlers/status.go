@@ -30,7 +30,7 @@ func (h *Handlers) Status(w http.ResponseWriter, r *http.Request) {
 		OverallStatus:      "OK",
 	}
 
-	bytes, _ := json.MarshalIndent(statusPage, "", "    ")
+	bytes, _ := json.MarshalIndent(statusPage, "", "  ")
 
 	w.Write(bytes)
 }

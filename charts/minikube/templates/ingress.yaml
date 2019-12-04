@@ -5,20 +5,15 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /namespace
   name: {{ .Chart.Name }}
   labels:
-    {{- include "labels" . | indent 4 }}
+        {{- include "labels" . | indent 4 }}
 spec:
   rules:
-    - host: podrick.minikube
+          {{- range .Values.ingressHosts }}
+    - host: {{ . }}
       http:
         paths:
           - path: /
             backend:
-              serviceName: {{ .Chart.Name }}
-              servicePort: {{ .Values.service.externalPort }}
-    - host: aggro.minikube.bmtapps.bskyb.com
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: {{ .Chart.Name }}
-              servicePort: {{ .Values.service.externalPort }}
+              serviceName: {{ $.Chart.Name }}
+              servicePort: 80
+        {{- end }}

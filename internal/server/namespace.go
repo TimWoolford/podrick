@@ -6,7 +6,7 @@ import (
 	"k8s.io/api/core/v1"
 )
 
-func (s *K8sServer) NamespaceList() ([]v1.Namespace) {
+func (s *K8sServer) NamespaceList() []v1.Namespace {
 	namespaces, err := s.clientSet.CoreV1().Namespaces().List(metav1.ListOptions{})
 
 	if err != nil {

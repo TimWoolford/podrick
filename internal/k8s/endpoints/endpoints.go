@@ -1,15 +1,14 @@
 package endpoints
 
 import (
-	"k8s.io/api/core/v1"
 	"github.com/TimWoolford/podrick/internal/config"
+	"k8s.io/api/core/v1"
 )
 
 type K8sEndpoints struct {
 	endpoints *v1.Endpoints
 	config    *config.Config
 }
-
 
 func New(eps *v1.Endpoints, config *config.Config) *K8sEndpoints {
 	return &K8sEndpoints{endpoints: eps, config: config}
@@ -35,7 +34,7 @@ func notReadyEndpoints(subset v1.EndpointSubset) []v1.EndpointAddress {
 	return subset.NotReadyAddresses
 }
 
-func (eps K8sEndpoints) endpointsFor(expectedPort int32, srcFunc func(subset v1.EndpointSubset) ([]v1.EndpointAddress)) []K8sEndpoint {
+func (eps K8sEndpoints) endpointsFor(expectedPort int32, srcFunc func(subset v1.EndpointSubset) []v1.EndpointAddress) []K8sEndpoint {
 	port := firstPort(expectedPort, eps.endpoints.Subsets)
 
 	var addresses []K8sEndpoint

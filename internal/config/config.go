@@ -1,9 +1,9 @@
 package config
 
 import (
-	"log"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -19,7 +19,7 @@ type Config struct {
 	ClusterName          string
 }
 
-func Load(configFile string) (*Config) {
+func Load(configFile string) *Config {
 	data, err1 := ioutil.ReadFile(configFile)
 	if err1 != nil {
 		log.Fatalf("error: %v", err1)

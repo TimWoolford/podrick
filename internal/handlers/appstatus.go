@@ -25,7 +25,7 @@ func (h *Handlers) AppStatus(w http.ResponseWriter, r *http.Request) {
 		out.AddPod(loadPodFrom(ep, request.StatusPath))
 	}
 
-	bytes, _ := json.MarshalIndent(&out, "", "    ")
+	bytes, _ := json.MarshalIndent(&out, "", "  ")
 
 	w.Header()["Content-Type"] = []string{"application/json"}
 	w.Write(bytes)

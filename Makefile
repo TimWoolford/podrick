@@ -3,7 +3,6 @@ CIRCLE_BUILD_NUM ?= dev
 APP=podrick
 PKG=/go/src/github.com/TimWoolford/${APP}
 TAG=timwoolford/${APP}:0.1.$(CIRCLE_BUILD_NUM)
-TILLER_NAMESPACE?=helm
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
 GODEP = $(BIN)/dep
@@ -24,7 +23,7 @@ build:
 	docker run --rm \
 	 -v "${PWD}":${PKG} \
 	 -w ${PKG} \
-	 golang:1.11 \
+	 golang:1.12 \
 	 make gobuild
 
 .PHONY: build-image
@@ -56,4 +55,4 @@ clean-minikube:
 
 .PHONY: deploy-minikube
 deploy-minikube:
-	helm upgrade --tiller-namespace ${TILLER_NAMESPACE} --install ${APP} charts/minikube --namespace monitoring
+	helm upgrade --tiller-namespace kube-system --install ${APP} charts/minikube --namespace monitoring

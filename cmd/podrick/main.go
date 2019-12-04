@@ -3,12 +3,12 @@ package main
 import (
 	"net/http"
 
+	"github.com/TimWoolford/podrick/internal/config"
 	"github.com/TimWoolford/podrick/internal/handlers"
 	"github.com/TimWoolford/podrick/internal/server"
-	"github.com/TimWoolford/podrick/internal/config"
 
-	"github.com/gorilla/mux"
 	ghandlers "github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 
 	"log"
 	"os"

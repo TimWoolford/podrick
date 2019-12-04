@@ -4,10 +4,16 @@ service:
 
 properties:
   appVersion: 112
-  configVersion: 53
   cluster:
-    location: dev
-    environment: sonique
+    location: local
+    environment: minikube
 
 image:
-  tag: 'timwoolford/podrick:0.1.dev'
+  tag: '0.1.dev'
+  name: 'timwoolford/podrick'
+
+ingressHosts:
+  - 'podrick.minikube'
+  - 'podrick.minikube.bmtapps.bskyb.com'
+  - 'podrick.minikube-local.bmtapps.bskyb.com'
+  - 'aggro.minikube-local.bmtapps.bskyb.com'
