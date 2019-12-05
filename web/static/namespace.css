@@ -7,6 +7,12 @@
     cursor: pointer;
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(8, 240px);
+    grid-auto-flow: dense;
+}
+
 .namespace-wrapper {
     padding: 5px 10px 1px 10px;
     background-color: slategrey;

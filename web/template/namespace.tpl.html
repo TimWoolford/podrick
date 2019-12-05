@@ -1,5 +1,5 @@
-<div class="namespace-wrapper">
-    <div class="namespace-name" onclick="location.href='/namespace/{{ .Name }}'">{{ .Name }}</div>
+<div class="namespace-wrapper" style="grid-row: {{ len .Deployments }} / 5">
+    <div class="namespace-name" onclick="location.href='/namespace/{{ .Name }}'" >{{ .Name }}</div>
 
     {{ if not .Deployments }}
         <div class="state-text">No Deployments</div>
