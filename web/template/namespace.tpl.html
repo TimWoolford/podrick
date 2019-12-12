@@ -1,4 +1,4 @@
-<div class="namespace-wrapper" style="grid-row: {{ len .Deployments }} / 5">
+<div class="namespace-wrapper" {{ if .Deployments }}style="grid-row-end: span {{ len .Deployments }};"{{ end }}>
     <div class="namespace-name" onclick="location.href='/namespace/{{ .Name }}'" >{{ .Name }}</div>
 
     {{ if not .Deployments }}

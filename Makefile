@@ -42,7 +42,7 @@ clean-vendor:
 clean: ; $(info $(M) cleaning…)
 	$Q docker images -q ${TAG} | xargs docker rmi -f
 	$Q rm -rf bin/*
-
+	go clean ./cmd/podrick
 
 vendor: Gopkg.toml Gopkg.lock ; $(info $(M) retrieving dependencies…)
 	$Q command -v $(GODEP) >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
@@ -51,7 +51,7 @@ vendor: Gopkg.toml Gopkg.lock ; $(info $(M) retrieving dependencies…)
 
 
 clean-minikube:
-	helm delete ${APP} --purge
+	helm delete ${APP} --purge --tiller-namespace kube-system || true
 
 .PHONY: deploy-minikube
 deploy-minikube:

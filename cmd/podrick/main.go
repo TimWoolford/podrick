@@ -33,6 +33,8 @@ func main() {
 
 	r.HandleFunc("/{namespace}/http/{name}", handler.AppStatus)
 
+	r.HandleFunc("", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, handlers.AllNamespacePath, http.StatusMovedPermanently) })
+
 	loggedRouter := ghandlers.LoggingHandler(os.Stdout, r)
 	http.Handle("/", loggedRouter)
 	http.ListenAndServe(":8082", nil)

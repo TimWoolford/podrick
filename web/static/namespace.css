@@ -9,8 +9,8 @@
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(8, 240px);
-    grid-auto-flow: dense;
+    grid-auto-columns: 240px;
+    grid-auto-flow: column dense;
 }
 
 .namespace-wrapper {
