@@ -1,13 +1,14 @@
 package server
 
 import (
+	"context"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"k8s.io/api/extensions/v1beta1"
 )
 
 func (s *K8sServer) IngressList(namespace string) []v1beta1.Ingress {
-	ingressList, err := s.clientSet.ExtensionsV1beta1().Ingresses(namespace).List(metav1.ListOptions{})
+	ingressList, err := s.clientSet.ExtensionsV1beta1().Ingresses(namespace).List(context.TODO(), metav1.ListOptions{})
 
 	if err != nil {
 		panic(err)
@@ -17,7 +18,7 @@ func (s *K8sServer) IngressList(namespace string) []v1beta1.Ingress {
 }
 
 func (s *K8sServer) Ingress(namespace string, name string) v1beta1.Ingress {
-	ingress, err := s.clientSet.ExtensionsV1beta1().Ingresses(namespace).Get(name, metav1.GetOptions{})
+	ingress, err := s.clientSet.ExtensionsV1beta1().Ingresses(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 
 	if err != nil {
 		panic(err)

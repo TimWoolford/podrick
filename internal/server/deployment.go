@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"fmt"
@@ -8,7 +9,7 @@ import (
 )
 
 func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDeployment {
-	dep, err := s.clientSet.ExtensionsV1beta1().Deployments(namespace).Get(name, metav1.GetOptions{})
+	dep, err := s.clientSet.ExtensionsV1beta1().Deployments(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 
 	if err != nil {
 		notFoundString := fmt.Sprintf("deployments.apps \"%s\" not found", name)
@@ -22,7 +23,7 @@ func (s *K8sServer) Deployment(namespace string, name string) *deployment.K8sDep
 }
 
 func (s *K8sServer) DeploymentList(namespace string) []deployment.K8sDeployment {
-	deploymentList, err := s.clientSet.ExtensionsV1beta1().Deployments(namespace).List(metav1.ListOptions{})
+	deploymentList, err := s.clientSet.ExtensionsV1beta1().Deployments(namespace).List(context.TODO(), metav1.ListOptions{})
 
 	if err != nil {
 		panic(err.Error())

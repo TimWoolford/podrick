@@ -1,13 +1,14 @@
 package deployment
 
 import (
-	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/api/extensions/v1beta1"
+	"fmt"
+	"strings"
 
 	"github.com/TimWoolford/podrick/internal/config"
 	"github.com/TimWoolford/podrick/internal/status"
-	"strings"
-	"fmt"
+
+	"k8s.io/api/extensions/v1beta1"
+	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type K8sDeployment struct {
@@ -75,7 +76,7 @@ func (dep *K8sDeployment) StatusUri() string {
 
 func (dep K8sDeployment) SvgStatus() *status.SvgStatus {
 	return &status.SvgStatus{
-		StatusUri:	   dep.StatusUri(),
+		StatusUri:     dep.StatusUri(),
 		ClusterName:   dep.config.ClusterName,
 		Version:       dep.Version(),
 		PrimaryColour: dep.State().Colour(),

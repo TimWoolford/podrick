@@ -1,12 +1,13 @@
 package server
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"context"
 	"github.com/TimWoolford/podrick/internal/k8s/pod"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func (s *K8sServer) PodList(namespace string) []pod.K8sPod {
-	podList, err := s.clientSet.CoreV1().Pods(namespace).List(metav1.ListOptions{})
+	podList, err := s.clientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
 
 	if err != nil {
 		panic(err)
@@ -20,7 +21,7 @@ func (s *K8sServer) PodList(namespace string) []pod.K8sPod {
 }
 
 func (s *K8sServer) Pod(namespace string, name string) *pod.K8sPod {
-	thePod, err := s.clientSet.CoreV1().Pods(namespace).Get(name, metav1.GetOptions{})
+	thePod, err := s.clientSet.CoreV1().Pods(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 
 	if err != nil {
 		panic(err)

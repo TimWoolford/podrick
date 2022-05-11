@@ -5,7 +5,6 @@ PKG=/go/src/github.com/TimWoolford/${APP}
 TAG=timwoolford/${APP}:0.1.$(CIRCLE_BUILD_NUM)
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
-GODEP = $(BIN)/dep
 V = 0
 Q = $(if $(filter 1,$V),,@)
 M = $(shell printf "\033[34;1m▶\033[0m")
@@ -23,7 +22,7 @@ build:
 	docker run --rm \
 	 -v "${PWD}":${PKG} \
 	 -w ${PKG} \
-	 golang:1.12 \
+	 golang:1.18 \
 	 make gobuild
 
 .PHONY: build-image
@@ -36,7 +35,7 @@ push-image:
 
 .PHONY: clean-vendor
 clean-vendor:
-	rm -rf .vendor vendor Gopkg.lock
+	rm -rf vendor
 
 .PHONY: clean
 clean: ; $(info $(M) cleaning…)
@@ -44,11 +43,8 @@ clean: ; $(info $(M) cleaning…)
 	$Q rm -rf bin/*
 	go clean ./cmd/podrick
 
-vendor: Gopkg.toml Gopkg.lock ; $(info $(M) retrieving dependencies…)
-	$Q command -v $(GODEP) >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
-	$Q $(GODEP) ensure -v
-	$Q touch $@
-
+vendor: ; $(info $(M) retrieving dependencies…)
+	$Q go mod vendor
 
 clean-minikube:
 	helm delete ${APP} --purge --tiller-namespace kube-system || true
