@@ -4,7 +4,7 @@ jobs:
      docker:
        - image: cimg/go:1.18
 
-     working_directory: /go/src/github.com/TimWoolford/podrick
+     working_directory: /home/circleci/go/src/github.com/TimWoolford/podrick
 
      steps:
        - setup_remote_docker
